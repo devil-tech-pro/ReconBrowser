@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Hacker Browser</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+body{
+margin:0;
+background:black;
+color:#00ff00;
+font-family:monospace;
+}
+
+/* NAVBAR */
+
+#navbar{
+background:#111;
+padding:8px;
+display:flex;
+gap:5px;
+}
+
+button{
+background:black;
+color:#00ff00;
+border:1px solid #00ff00;
+padding:5px;
+cursor:pointer;
+}
+
+#url{
+flex:1;
+background:black;
+color:#00ff00;
+border:1px solid #00ff00;
+}
+
+/* MAIN LAYOUT */
+
+#container{
+display:flex;
+height:60vh;
+}
+
+webview{
+flex:3;
+}
+
+#side{
+flex:1;
+border-left:1px solid #00ff00;
+padding:10px;
+overflow:auto;
+}
+
+/* BOTTOM PANEL */
+
+#bottom{
+display:flex;
+height:25vh;
+border-top:1px solid #00ff00;
+}
+
+#terminal{
+flex:1;
+overflow:auto;
+padding:10px;
+border-right:1px solid #00ff00;
+}
+
+#httpPanel{
+flex:1;
+overflow:auto;
+padding:10px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div id="navbar">
+
+<button onclick="back()">⬅</button>
+<button onclick="forward()">➡</button>
+<button onclick="reload()">🔄</button>
+
+<input id="url" placeholder="enter site">
+
+<button onclick="devtools()">DevTools</button>
+
+</div>
+
+<div id="container">
+
+<webview id="view" src="https://example.com"></webview>
+
+<div id="side">
+
+<h3>REQUEST LOGGER</h3>
+
+<div id="logs"></div>
+
+<h3>RECON</h3>
+
+<input id="domain" placeholder="example.com">
+
+<button onclick="findIP()">IP Finder</button>
+
+<button onclick="scanSubs()">Subdomains</button>
+
+<button onclick="scanPorts()">Ports</button>
+
+<div id="results"></div>
+
+<canvas id="graph"></canvas>
+
+</div>
+
+</div>
+
+<div id="bottom">
+
+<div id="terminal">
+
+> Hacker Browser Ready
+
+</div>
+
+<div id="httpPanel">
+
+<h3>HTTP INFO</h3>
+
+<div id="headers"></div>
+
+<h3>Cookies</h3>
+
+<div id="cookies"></div>
+
+</div>
+
+</div>
+
+<script src="renderer.js"></script>
+
+</body>
+
+</html>
