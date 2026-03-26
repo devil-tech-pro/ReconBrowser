@@ -2,6 +2,7 @@ const { app, BrowserWindow, ipcMain, session } = require("electron");
 const path = require("path");
 const dns = require("dns");
 const net = require("net");
+const https = require("https");
 
 let win;
 
@@ -21,19 +22,15 @@ webviewTag:true
 
 win.loadFile("index.html");
 
-/* CAPTURE RESPONSE HEADERS */
+/* HTTP HEADERS */
 
 session.defaultSession.webRequest.onHeadersReceived(
 
-{ urls:["<all_urls>"] },
+{urls:["<all_urls>"]},
 
-(details, callback)=>{
+(details,callback)=>{
 
-if(win){
-
-win.webContents.send("headers-data", details.responseHeaders);
-
-}
+win.webContents.send("headers",details.responseHeaders);
 
 callback({cancel:false});
 
@@ -45,39 +42,52 @@ callback({cancel:false});
 
 app.whenReady().then(createWindow);
 
-/* SUBDOMAIN SCAN */
+/* AUTO RECON */
 
-ipcMain.handle("scan-subdomains", async(e,domain)=>{
+ipcMain.handle("scan-site",async(e,domain)=>{
 
-const list=["www","api","mail","dev","test","admin","beta"];
+let result={
+ip:"",
+subdomains:[],
+ports:[],
+directories:[]
+};
 
-let found=[];
+/* IP */
 
-for(let sub of list){
+try{
 
-let host=sub+"."+domain;
+let ip=await dns.promises.lookup(domain);
+
+result.ip=ip.address;
+
+}catch{
+
+result.ip="not found";
+
+}
+
+/* SUBDOMAINS */
+
+const subs=["www","api","mail","dev","test","admin","beta"];
+
+for(let s of subs){
+
+let host=s+"."+domain;
 
 try{
 
 await dns.promises.resolve(host);
 
-found.push(host);
+result.subdomains.push(host);
 
 }catch{}
 
 }
 
-return found;
-
-});
-
-/* PORT SCAN */
-
-ipcMain.handle("scan-ports", async(e,host)=>{
+/* PORTS */
 
 const ports=[21,22,80,443,3000,8080];
-
-let open=[];
 
 for(let port of ports){
 
@@ -87,9 +97,9 @@ const socket=new net.Socket();
 
 socket.setTimeout(500);
 
-socket.connect(port,host,()=>{
+socket.connect(port,domain,()=>{
 
-open.push(port);
+result.ports.push(port);
 
 socket.destroy();
 
@@ -104,24 +114,32 @@ socket.on("timeout",()=>res());
 
 }
 
-return open;
+/* DIRECTORIES */
+
+const dirs=["admin","login","dashboard","api","uploads","images","assets"];
+
+for(let d of dirs){
+
+let url="https://"+domain+"/"+d;
+
+await new Promise(res=>{
+
+https.get(url,(resp)=>{
+
+if(resp.statusCode<400){
+
+result.directories.push(url);
+
+}
+
+res();
+
+}).on("error",()=>res());
 
 });
 
-/* IP FINDER */
-
-ipcMain.handle("find-ip", async(e,domain)=>{
-
-try{
-
-let result=await dns.promises.lookup(domain);
-
-return result.address;
-
-}catch{
-
-return "IP not found";
-
 }
+
+return result;
 
 });
