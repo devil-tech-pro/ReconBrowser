@@ -1,0 +1,16 @@
+{
+  "name": "hacker-browser",
+  "version": "1.0.0",
+  "description": "Custom hacker style browser",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Devil-tech-pro",
+  "license": "ISC",
+  "dependencies": {
+    "electron": "^40.8.0"
+  }
+}
