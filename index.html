@@ -3,9 +3,7 @@
 
 <head>
 
-<title>Hacker Browser</title>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<title>Recon Hacker Browser</title>
 
 <style>
 
@@ -91,9 +89,7 @@ padding:10px;
 <button onclick="forward()">➡</button>
 <button onclick="reload()">🔄</button>
 
-<input id="url" placeholder="enter site">
-
-<button onclick="devtools()">DevTools</button>
+<input id="url" placeholder="enter website">
 
 </div>
 
@@ -103,23 +99,9 @@ padding:10px;
 
 <div id="side">
 
-<h3>REQUEST LOGGER</h3>
-
-<div id="logs"></div>
-
-<h3>RECON</h3>
-
-<input id="domain" placeholder="example.com">
-
-<button onclick="findIP()">IP Finder</button>
-
-<button onclick="scanSubs()">Subdomains</button>
-
-<button onclick="scanPorts()">Ports</button>
+<h3>Recon Info</h3>
 
 <div id="results"></div>
-
-<canvas id="graph"></canvas>
 
 </div>
 
@@ -135,7 +117,7 @@ padding:10px;
 
 <div id="httpPanel">
 
-<h3>HTTP INFO</h3>
+<h3>HTTP Headers</h3>
 
 <div id="headers"></div>
 
