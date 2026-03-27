@@ -8,3 +8,6 @@ npm install
 ```
 npm install electron
 ```
+```
+npm start
+```
